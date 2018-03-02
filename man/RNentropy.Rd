@@ -63,8 +63,8 @@ Federico Zambelli - Dep. of Biosciences, University of Milan
 \examples{
 #load expression values and experiment design
 data("RN_Brain_Example_tpm", "RN_Brain_Example_design")
-#compute statistics and p-values 
-#Limited to first 10000 transcripts due to CRAN computation time restrictions
+#compute statistics and p-values (considering only a subset of genes due to
+#examples running time limit of CRAN) 
 Results <- RN_calc(RN_Brain_Example_tpm[1:10000,], RN_Brain_Example_design)
 #select only genes with significant changes of expression
 Results <- RN_select(Results)

@@ -153,86 +153,89 @@ function (row, mu)
 #    return(gsum)
     return(sum(row, na.rm=TRUE))
 }
-.RN_calc_LPV_row <-
-function (row_nums, design)
+.RN_get_replicate_list <- function(design)
 {
+  repL <- list()
+  
+  for(i in 1:dim(design)[1])
+  {
+    experiment <- match(1,design[i,])
+    
+    repL[[i]] <- i
+    
+    for(k in 1:dim(design)[1])
+    {
+      if(match(1, design[k,]) == experiment & i != k)
+      {
+          repL[[i]] <- append(repL[[i]], k)
+      }
+    }
+  }
+  
+  return(repL)
+}
 
+.RN_calc_LPV_row <-
+function (row_nums, RL)
+{
+  row_nums <- as.numeric(row_nums)
+  
 	if(all(row_nums == 0))
 	{
 		return(rep(0, length(row_nums)))
 	}
 
-	if(length(row_nums) != length(design[,1]))
-	{
-		stop("design matrix does not correspond to number of treatments in X", call.=FALSE)
-	}
-
 	rn_l <- length(row_nums)
 	LPV <- vector(mode="numeric", rn_l)
-
+	
 	for(j in seq_along(row_nums))
 	{
-		pv <- 0
-		ltot <- row_nums[[j]]
-		ecount <- 1
-		rcount <- 0
-
-		experiment <- match(1,design[j,])
-
-		for(k in seq_along(row_nums))
-		{
-
-			if(match(1, design[k,]) != experiment)
-			{
-				ltot <- ltot + row_nums[[k]]
-				ecount <- ecount + 1
-			}
-			else
-			{
-				rcount <- rcount + 1	
-			}
-		}
-
-		lmu <- ltot / ecount
-
-		if(row_nums[[j]] != 0)	
-		{
-			pv <- row_nums[[j]] * log(row_nums[[j]] / lmu)
-		}	
-
-
-		if(ltot != row_nums[j])
-		{
-			pv <- pv + (ltot - row_nums[[j]]) * (log((ltot - row_nums[[j]]) / ((rn_l - rcount) * lmu)))
-		}
-
-		chi <-  pchisq(2 * pv, 1, lower.tail=FALSE)
-
-		if(row_nums[j]  >= lmu)
-		{
-			if(chi > 0)
-			{
-				LPV[j] <- -log10(chi)
-			}
-			else
-			{
-				LPV[j] <- 300
-			}
-		}	
-		else
-		{
-			if(chi > 0)
-                        {
-                                LPV[j] <- log10(chi)
-                        }
-                        else
-                        {
-                                LPV[j] <- -300
-                        }
-		}
-
+	  pv <- 0
+	  rl <- RL[[j]]
+	  rcount <- length(rl)
+	  ecount <- (length(row_nums) - rcount) + 1
+	   
+	  ltot <- row_nums[j] + sum(row_nums[-rl])
+	  
+	  lmu <- ltot / ecount
+	  
+	  if(row_nums[j] != 0)	
+	  {
+	    pv <- row_nums[j] * log(row_nums[j] / lmu)
+	  }	
+	  
+	  if(ltot != row_nums[j])
+	  {
+	    pv <- pv + (ltot - row_nums[j]) * (log((ltot - row_nums[j]) / ((rn_l - rcount) * lmu)))
+	  }
+	 
+	  chi <-  pchisq(2 * pv, 1, lower.tail=FALSE)
+	  
+	  if(row_nums[j]  >= lmu)
+	  {
+	    if(chi > 0)
+	    {
+	      LPV[j] <- -log10(chi)
+	    }
+	    else
+	    {
+	      LPV[j] <- 300
+	    }
+	  }	
+	  else
+	  {
+	    if(chi > 0)
+	    {
+	      LPV[j] <- log10(chi)
+	    }
+	    else
+	    {
+	      LPV[j] <- -300
+	    }
+	  }
+	  
 	}
-
+	
 	return(LPV)
 }
 .RN_delete_col <-
@@ -312,3 +315,9 @@ function(x, design_b, lpv_t)
 		return (0);
 	}
 }
+
+.RN_clean_NA <- function(r)
+{
+  return(!all(is.na(r)))
+}
+
