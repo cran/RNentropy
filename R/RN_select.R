@@ -9,13 +9,16 @@ function(Results, gpv_t = 0.01, lpv_t = 0.01, method = "BH")
 	true_rows <- (Results$gpv_bh >= gpv_t)
 
 	design_b <- t(Results$design > 0)	
-
+	
 	Results$lpv_sel <- data.frame(row.names = rownames(Results$lpv)[true_rows])
-
+	
+	boh <- list()
+	
 	for(d in seq_along(design_b[,1]))
 	{
-		col <- apply(Results$lpv[true_rows,], 1, ".RN_select_lpv_row", design_b[d,], lpv_t)
-		Results$lpv_sel <- cbind(Results$lpv_sel, col)
+	  Results$lpv_sel <- cbind(Results$lpv_sel, 
+	                           apply(as.matrix(Results$lpv[true_rows,design_b[d,, drop = F]]), 
+	                                 1, ".RN_select_lpv_row", lpv_t))
 	}
 	
 	colnames(Results$lpv_sel) <- colnames(Results$design)

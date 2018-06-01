@@ -292,28 +292,62 @@ function (x, cfri, fri) {
 	
 	return (x * log(cfri / fri))
 }
+
+#.RN_select_lpv_row <-
+#function(x, design_b, lpv_t)
+#{
+#	if(all(abs(x[design_b]) >= lpv_t))
+#	{
+#		if(all(x[design_b] > 0))
+#		{
+#			return (1)
+#		}
+#		else if(all(x[design_b] < 0))
+#		{
+#			return (-1)
+#		}
+#		else
+#		{
+#			return (NA)
+#		}
+#	}	
+#	else
+#	{
+#		return (0);
+#	}
+# }
+
 .RN_select_lpv_row <-
-function(x, design_b, lpv_t)
+function(x, lpv_t)
+  {
+    if(all(abs(x) >= lpv_t))
+    {
+      if(all(x > 0))
+      {
+        return (1)
+      }
+      else if(all(x < 0))
+      {
+        return (-1)
+      }
+      else
+      {
+        return (NA)
+      }
+    }	
+    else
+    {
+      return (0);
+    }
+}
+
+.RN_default_design <- function(N)
 {
-	if(all(abs(x[design_b]) >= lpv_t))
-	{
-		if(all(x[design_b] > 0))
-		{
-			return (1)
-		}
-		else if(all(x[design_b] < 0))
-		{
-			return (-1)
-		}
-		else
-		{
-			return (NA)
-		}
-	}	
-	else
-	{
-		return (0);
-	}
+    d <- matrix(data = 0, nrow = N, ncol = N)
+    
+    for(i in 1:N) {d[i,i] <- 1}
+    
+    return(d)
 }
 
 .RN_clean_NA <- function(r)

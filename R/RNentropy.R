@@ -1,5 +1,5 @@
 RNentropy <-
-function(file, tr.col, design, header = TRUE, skip = 0, skip.col = NULL, col.names = NULL)
+function(file, tr.col, design = NULL, header = TRUE, skip = 0, skip.col = NULL, col.names = NULL)
 {
 
 	TABLE <- read.table(file, row.names = tr.col, header = header, skip = skip, blank.lines.skip = TRUE, comment.char = "#") 	

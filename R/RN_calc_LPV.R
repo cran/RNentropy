@@ -1,6 +1,11 @@
 RN_calc_LPV <-
-function(X, design, bind = TRUE)
+function(X, design = NULL, bind = TRUE)
 {
+  if(is.null(design))
+  {
+    design <- .RN_default_design(sum(sapply(X, is.numeric)))
+  }
+  
 	rnums <- sapply(X, is.numeric)
 
 	.RN_design_check(X, design, rnums)

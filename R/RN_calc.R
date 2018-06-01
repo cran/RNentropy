@@ -1,6 +1,11 @@
 RN_calc <-
-function(X, design)
+function(X, design = NULL)
 {
+  if(is.null(design))
+  {
+    design <- .RN_default_design(sum(sapply(X, is.numeric)))
+  }
+  
 	Results <- list(expr = X, design = design)
 
 	GPV <- RN_calc_GPV(X, bind = FALSE)

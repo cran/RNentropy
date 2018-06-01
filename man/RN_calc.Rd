@@ -20,7 +20,7 @@ data.frame with expression values. It may contain additional non numeric columns
 }
   \item{design}{
 %%     ~~Describe \code{design} here~~
-The RxC design matrix where R (rows) corresponds to the number of numeric columns (samples) in 'file' and C (columns) to the number of conditions. It must be a binary matrix with one and only one '1' for every row, corresponding to the condition (column) for which the sample corresponding to the row has to be considered a biological ot technical replicate. See the example 'RN_Brain_Example_design' for the design matrix of 'RN_Brain_Example_tpm' which has three replicates for three conditions (three rows) for a total of nine samples (nine rows).
+The RxC design matrix where R (rows) corresponds to the number of numeric columns (samples) in 'file' and C (columns) to the number of conditions. It must be a binary matrix with one and only one '1' for every row, corresponding to the condition (column) for which the sample corresponding to the row has to be considered a biological ot technical replicate. See the example 'RN_Brain_Example_design' for the design matrix of 'RN_Brain_Example_tpm' which has three replicates for three conditions (three rows) for a total of nine samples (nine rows). design defaults to a square matrix of independent samples (diagonal = 1, everything else = 0)
 }
 }
 
@@ -53,21 +53,27 @@ data("RN_Brain_Example_tpm", "RN_Brain_Example_design")
 Results <- RN_calc(RN_Brain_Example_tpm[1:10000,], RN_Brain_Example_design)
 
 ## The function is currently defined as
-function(X, design)
+
+function(X, design = NULL)
 {
-        Results <- list(expr = X, design = design)
+  if(is.null(design))
+  {
+    design <- .RN_default_design(sum(sapply(X, is.numeric)))
+  }
+  
+	Results <- list(expr = X, design = design)
 
-        GPV <- RN_calc_GPV(X, bind = FALSE)
-        LPV <- RN_calc_LPV(X, design = design, bind = FALSE)
+	GPV <- RN_calc_GPV(X, bind = FALSE)
+	LPV <- RN_calc_LPV(X, design = design, bind = FALSE)	
 
-        TABLE = cbind(X,'---',GPV,'---',LPV)
+	TABLE = cbind(X,'---',GPV,'---',LPV)	
 
-        Results$gpv <- GPV
-        Results$lpv <- LPV
-        Results$c_like <- TABLE
-        Results$res <- cbind(X, GPV, LPV)
-
-        return(Results)
+	Results$gpv <- GPV
+	Results$lpv <- LPV
+	Results$c_like <- TABLE
+	Results$res <- cbind(X, GPV, LPV)
+	
+	return(Results)
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
