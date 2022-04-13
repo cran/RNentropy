@@ -7,7 +7,7 @@ RN_BarresLab_FPKM
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of the dataset. ~~
-Data expression values (mean FPMK) for different cerebral cortex cell from Zhang et al: "An RNA-Seq transcriptome and splicing database of glia, neurons, and vascular cells of the cerebral cortex", J Neurosci 2014 Sep. 
+Data expression values (mean FPKM) for different cerebral cortex cell from Zhang et al: "An RNA-Seq transcriptome and splicing database of glia, neurons, and vascular cells of the cerebral cortex", J Neurosci 2014 Sep. 
 RN_BarresLab_design is the corresponding design matrix.
 }
 \usage{data("RN_BarresLab_FPKM")}

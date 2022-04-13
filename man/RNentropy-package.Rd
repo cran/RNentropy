@@ -13,6 +13,7 @@
 Maintainer: \packageMaintainer{RNentropy}
 }
 \references{doi = {10.1093/nar/gky055}
+doi = {10.1007/978-1-0716-1307-8_6}
 }
 \keyword{ package }
 

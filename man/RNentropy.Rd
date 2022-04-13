@@ -39,7 +39,7 @@ Columns that will not be imported from 'file' (1 based) and not included in the 
 }
   \item{col.names}{
 %%     ~~Describe \code{col.names} here~~
-Assign names to the imported colums. The number of names must correspond to the columns effectively imported (thus, no name for the skipped ones). Also, tr.col is not considered an imported column. Useful to assign sample names to expression columns.
+Assign names to the imported columns. The number of names must correspond to the columns effectively imported (thus, no name for the skipped ones). Also, tr.col is not considered an imported column. Useful to assign sample names to expression columns.
 }
 }
 
